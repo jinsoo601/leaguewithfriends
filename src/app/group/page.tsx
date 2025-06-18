@@ -90,7 +90,7 @@ export default async function GroupPage({ searchParams }: GroupPageProps) {
 			<main className="p-4 grid grid-cols-1 md:grid-cols-2 gap-6">
 				<section className="col-span-2 md:col-span-1 bg-gray-500/40 rounded-lg shadow-lg overflow-hidden flex flex-col h-[40rem]">
 					<header className="bg-gray-500/40 px-6 py-4 flex-shrink-0">
-						<h2 className="text-lg font-semibold text-white">Match History</h2>
+						<h2 className="text-lg font-semibold text-white">Match History (Last {matches.length} matches)</h2>
 					</header>
 					<section className="p-6 flex-1 overflow-y-auto">
 						<MatchHistory matches={matches} puuids={puuids} />
