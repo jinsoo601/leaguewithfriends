@@ -28,11 +28,24 @@ export default function Attendance({ puuids, matches, accounts }: AttendanceProp
 			attendance[id].push(playersInMatch.includes(id));
 		});
 
-		return playersInMatch;
+		return {
+			players: playersInMatch,
+			gameCreation: match.info.gameCreation,
+		};
 	});
 
 	// For each player, compute attendance total
 	const totals = puuids.map(id => attendance[id].filter(present => present).length);
+
+	const formatDate = (epochMs: number) => {
+		return new Date(epochMs).toLocaleString('en-US', {
+			month: 'short',
+			day: 'numeric',
+			hour: 'numeric',
+			minute: '2-digit',
+			hour12: true,
+		});
+	};
 
 	return (
 		<div className="overflow-x-auto text-gray-600">
@@ -40,6 +53,7 @@ export default function Attendance({ puuids, matches, accounts }: AttendanceProp
 				<thead>
 					<tr className="bg-gray-100">
 						<th className="border px-2 py-1 text-left whitespace-nowrap">Match #</th>
+						<th className="border px-2 py-1 text-left whitespace-nowrap">When</th>
 						{puuids.map(id => (
 							<th key={id} className="border px-2 py-1 text-center">
 								{puuidToRiotId[id] || id}
@@ -48,11 +62,12 @@ export default function Attendance({ puuids, matches, accounts }: AttendanceProp
 					</tr>
 				</thead>
 				<tbody>
-					{rows.map((players, i) => (
+					{rows.map((row, i) => (
 						<tr key={i} className="odd:bg-white even:bg-gray-50">
 							<td className="border px-2 py-1 text-center">#{matches.length - i}</td>
+							<td className="border px-2 py-1 text-left text-xs">{formatDate(row.gameCreation)}</td>
 							{puuids.map(id => {
-								const present = players.includes(id);
+								const present = row.players.includes(id);
 								return (
 									<td
 										key={id}
@@ -67,7 +82,9 @@ export default function Attendance({ puuids, matches, accounts }: AttendanceProp
 						</tr>
 					))}
 					<tr className="bg-gray-200 font-semibold">
-						<td className="border px-2 py-1 text-right">Total</td>
+						<td className="border px-2 py-1 text-right" colSpan={2}>
+							Total
+						</td>
 						{totals.map((count, i) => (
 							<td key={i} className="border px-2 py-1 text-center">
 								{count}
