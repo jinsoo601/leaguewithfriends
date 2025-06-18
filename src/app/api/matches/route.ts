@@ -1,3 +1,4 @@
+import { Match } from '@/types';
 import { NextResponse } from 'next/server';
 
 // Helper function to delay execution
@@ -29,7 +30,7 @@ export async function POST(req: Request) {
 		const uniqueMatchIds = [...new Set(matchIdsArrays.flat())];
 
 		// Process match details in chunks of 10 with 1 second delay between chunks
-		const matchDetails: any[] = [];
+		const matchDetails: Match[] = [];
 		const chunks = chunk(uniqueMatchIds, 10);
 
 		for (const chunk of chunks) {

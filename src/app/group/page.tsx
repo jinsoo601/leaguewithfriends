@@ -4,6 +4,7 @@ import MatchHistory from '@/components/MatchHistory';
 import Attendance from '@/components/Attendance';
 import KDARanking from '@/components/KDARanking';
 import DamageRanking from '@/components/DamageRanking';
+import { Account, Match } from '@/types';
 
 interface GroupPageProps {
 	searchParams?: { [key: string]: string | string[] | undefined };
@@ -46,7 +47,7 @@ export default async function GroupPage({ searchParams }: GroupPageProps) {
 	);
 
 	const validAccounts = accounts.filter(Boolean);
-	const puuids = validAccounts.map((acc: any) => acc.puuid);
+	const puuids = validAccounts.map((acc: Account) => acc.puuid);
 
 	if (puuids.length === 0) {
 		return <p className="p-4 text-red-600">Failed to retrieve any valid PUUIDs.</p>;
@@ -64,7 +65,7 @@ export default async function GroupPage({ searchParams }: GroupPageProps) {
 		return <p className="p-4 text-red-600">Error fetching match data: {matchesRes.statusText}</p>;
 	}
 
-	const matches = (await matchesRes.json()).filter((m: any) => m.info && m.metadata);
+	const matches = (await matchesRes.json()).filter((m: Match) => m.info && m.metadata);
 
 	// ✅ Display everything as raw JSON for now
 	return (

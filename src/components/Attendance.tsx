@@ -1,11 +1,12 @@
 'use client';
 
 import React from 'react';
+import { Match, Account } from '@/types';
 
 type AttendanceProps = {
 	puuids: string[];
-	matches: any[];
-	accounts: any[];
+	matches: Match[];
+	accounts: Account[];
 };
 
 export default function Attendance({ puuids, matches, accounts }: AttendanceProps) {
@@ -22,7 +23,7 @@ export default function Attendance({ puuids, matches, accounts }: AttendanceProp
 	puuids.forEach(id => (attendance[id] = []));
 
 	const rows = matches.map(match => {
-		const playersInMatch = match.info.participants.map((p: any) => p.puuid);
+		const playersInMatch = match.info.participants.map(p => p.puuid);
 
 		puuids.forEach(id => {
 			attendance[id].push(playersInMatch.includes(id));

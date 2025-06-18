@@ -1,9 +1,10 @@
 'use client';
 
 import React from 'react';
+import { Match } from '@/types';
 
 type DamageRankingProps = {
-	matches: any[];
+	matches: Match[];
 	puuids: string[];
 };
 
@@ -31,7 +32,7 @@ export default function DamageRanking({ matches, puuids }: DamageRankingProps) {
 	});
 
 	matches.forEach(match => {
-		match.info.participants.forEach((p: any) => {
+		match.info.participants.forEach(p => {
 			if (!stats[p.puuid]) return;
 			const s = stats[p.puuid];
 			s.damageDone += p.totalDamageDealtToChampions;

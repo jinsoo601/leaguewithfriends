@@ -1,8 +1,7 @@
 'use client';
 
 import React from 'react';
-
-type Match = any;
+import { Match, Participant } from '@/types';
 
 type MatchHistoryProps = {
 	matches: Match[];
@@ -38,15 +37,15 @@ export default function MatchHistory({ matches, puuids }: MatchHistoryProps) {
 					metadata: { matchId },
 				} = match;
 
-				const myParticipant = participants.find((p: any) => puuids.includes(p.puuid)) ?? participants[0];
+				const myParticipant = participants.find(p => puuids.includes(p.puuid)) ?? participants[0];
 
 				const myTeamId = myParticipant.teamId;
-				const myTeamWon = teams.find((t: any) => t.teamId === myTeamId)?.win;
+				const myTeamWon = teams.find(t => t.teamId === myTeamId)?.win;
 
-				const teamMy = participants.filter((p: any) => p.teamId === myTeamId);
-				const teamEnemy = participants.filter((p: any) => p.teamId !== myTeamId);
+				const teamMy = participants.filter(p => p.teamId === myTeamId);
+				const teamEnemy = participants.filter(p => p.teamId !== myTeamId);
 
-				const renderRow = (p: any) => (
+				const renderRow = (p: Participant) => (
 					<tr key={p.puuid} className="text-sm">
 						<td className="flex items-center gap-2 pr-2 py-1">
 							<img
