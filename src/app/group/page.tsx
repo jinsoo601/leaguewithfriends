@@ -7,7 +7,7 @@ import DamageRanking from '@/components/DamageRanking';
 import { Account, Match } from '@/types';
 
 interface GroupPageProps {
-	searchParams?: { [key: string]: string | string[] | undefined };
+	searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
 export default async function GroupPage({ searchParams }: GroupPageProps) {
