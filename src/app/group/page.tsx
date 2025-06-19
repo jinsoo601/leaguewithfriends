@@ -5,7 +5,7 @@ import Attendance from '@/components/Attendance';
 import KDARanking from '@/components/KDARanking';
 import DamageRanking from '@/components/DamageRanking';
 import { Account, Match } from '@/types';
-import { predefinedGroups, getGroupSlug, getGroupFromSlug } from '@/config/predefined-groups';
+import { predefinedGroups, getGroupSlug } from '@/config/predefined-groups';
 
 interface GroupPageProps {
 	searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
