@@ -1,5 +1,5 @@
-// /app/group/page.tsx
 import { headers } from 'next/headers';
+import { notFound } from 'next/navigation';
 import MatchHistory from '@/components/MatchHistory';
 import Attendance from '@/components/Attendance';
 import KDARanking from '@/components/KDARanking';
@@ -8,7 +8,7 @@ import { Account, Match } from '@/types';
 import { predefinedGroups, getGroupSlug, getGroupFromSlug } from '@/config/predefined-groups';
 
 interface GroupPageProps {
-	searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
+	params: Promise<{ slug: string }>;
 }
 
 // Pre-generate pages for predefined groups
@@ -18,18 +18,28 @@ export async function generateStaticParams() {
 	}));
 }
 
-export default async function GroupPage({ searchParams }: GroupPageProps) {
-	const riotIdsParam = (await searchParams)?.riotIds ?? '';
-	const riotIds =
-		typeof riotIdsParam === 'string'
-			? riotIdsParam
-					.split(',')
-					.map(id => id.trim())
-					.filter(Boolean)
-			: [];
+export default async function GroupPage({ params }: GroupPageProps) {
+	const { slug } = await params;
+
+	// Try to find the group in predefined groups first
+	let riotIds: string[] = [];
+	let groupName = 'Custom Group';
+
+	const predefinedGroup = predefinedGroups.find(group => getGroupSlug(group.riotIds) === slug);
+	if (predefinedGroup) {
+		riotIds = predefinedGroup.riotIds;
+		groupName = predefinedGroup.name;
+	} else {
+		// Try to parse as custom group
+		try {
+			riotIds = getGroupFromSlug(slug);
+		} catch (error) {
+			notFound();
+		}
+	}
 
 	if (riotIds.length === 0) {
-		return <p className="p-4 text-red-600">No Riot IDs provided.</p>;
+		notFound();
 	}
 
 	const host = (await headers()).get('host') || 'localhost:3000';
@@ -75,10 +85,15 @@ export default async function GroupPage({ searchParams }: GroupPageProps) {
 
 	const matches = (await matchesRes.json()).filter((m: Match) => m.info && m.metadata);
 
-	// ✅ Display everything as raw JSON for now
 	return (
 		<>
 			<header className="p-4">
+				<div className="flex items-center justify-between mb-4">
+					<h1 className="text-2xl font-bold text-gray-800">{groupName}</h1>
+					<a href="/group" className="text-blue-500 hover:text-blue-700">
+						Create New Group
+					</a>
+				</div>
 				<form action="/group" method="GET" className="flex items-center gap-2">
 					<label htmlFor="riotIds" className="sr-only">
 						Enter Riot IDs
@@ -89,7 +104,7 @@ export default async function GroupPage({ searchParams }: GroupPageProps) {
 						className="border p-2 flex-grow"
 						type="text"
 						placeholder="e.g. Player1#TAG1, Player2#TAG2"
-						defaultValue={riotIdsParam}
+						defaultValue={riotIds.join(', ')}
 					/>
 					<button className="bg-blue-500 text-white px-4 py-2" type="submit">
 						Update Group
