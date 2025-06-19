@@ -6,6 +6,7 @@ import KDARanking from '@/components/KDARanking';
 import DamageRanking from '@/components/DamageRanking';
 import { Account, Match } from '@/types';
 import { predefinedGroups, getGroupSlug, getGroupFromSlug } from '@/config/predefined-groups';
+import Link from 'next/link';
 
 interface GroupPageProps {
 	params: Promise<{ slug: string }>;
@@ -33,7 +34,7 @@ export default async function GroupPage({ params }: GroupPageProps) {
 		// Try to parse as custom group
 		try {
 			riotIds = getGroupFromSlug(slug);
-		} catch (error) {
+		} catch {
 			notFound();
 		}
 	}
@@ -90,9 +91,9 @@ export default async function GroupPage({ params }: GroupPageProps) {
 			<header className="p-4">
 				<div className="flex items-center justify-between mb-4">
 					<h1 className="text-2xl font-bold text-gray-800">{groupName}</h1>
-					<a href="/group" className="text-blue-500 hover:text-blue-700">
+					<Link href="/group" className="text-blue-500 hover:text-blue-700">
 						Create New Group
-					</a>
+					</Link>
 				</div>
 				<form action="/group" method="GET" className="flex items-center gap-2">
 					<label htmlFor="riotIds" className="sr-only">
